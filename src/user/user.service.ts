@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { User } from 'src/interfaces/user.interface';
-import { UserDto } from './dto/userCreate.dto';
+import { DeleteUserDto, UserDto } from './dto/userCreate.dto';
 
 @Injectable()
 export class UserService {
@@ -8,9 +8,9 @@ export class UserService {
   create(userDto: UserDto) {
     this.users.push(userDto);
   }
-  delete(userDto: UserDto) {
+  delete(deleteUserDto: DeleteUserDto) {
     this.users.pop();
-    console.log(userDto);
+    console.log(deleteUserDto);
     //delete user from db
   }
 }
