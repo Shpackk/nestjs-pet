@@ -1,17 +1,22 @@
-import { Body, Controller, Post } from '@nestjs/common';
-import { DeleteUserDto, UserDto } from './dto/userCreate.dto';
+import { Body, Controller, Delete, Post } from '@nestjs/common';
+import { CreateUserDto } from './dto/createUser.dto';
+import { DbUserDto } from './dto/dbUser.dto';
+import { DeleteUserDto } from './dto/userDelete.dto';
 import { UserService } from './user.service';
 
 @Controller('user')
 export class UserController {
   constructor(private userService: UserService) {}
   @Post('create')
-  create(@Body() userCreateDto: UserDto): void {
-    this.userService.create(userCreateDto);
+  async create(@Body() createUserDto: CreateUserDto): Promise<DbUserDto> {
+    const { name, location } = await this.userService.create(createUserDto);
+    return { name, location };
     //create user
   }
-  delete(@Body() deleteUserDto: DeleteUserDto): void {
-    this.userService.delete(deleteUserDto);
+  @Delete('delete')
+  async delete(@Body() deleteUserDto: DeleteUserDto): Promise<DbUserDto> {
+    const { name, location } = await this.userService.delete(deleteUserDto);
+    return { name, location };
     //delete user from db
   }
 }
