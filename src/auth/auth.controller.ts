@@ -7,8 +7,8 @@ export class AuthController {
   constructor(private authService: AuthService) {}
 
   @Post('login')
-  login(@Body() userLoginDto: LoginDto): void {
-    this.authService.login(userLoginDto);
+  login(@Body() loginDto: LoginDto): void {
+    this.authService.login(loginDto);
     //return success if login made it
   }
 }
