@@ -1,6 +1,7 @@
 import { Body, Controller, Delete, Post } from '@nestjs/common';
+import { UserEntity } from 'src/database/entities/user.entity';
+import { DeleteResult } from 'typeorm';
 import { CreateUserDto } from './dto/createUser.dto';
-import { DbUserDto } from './dto/dbUser.dto';
 import { DeleteUserDto } from './dto/userDelete.dto';
 import { UserService } from './user.service';
 
@@ -8,15 +9,13 @@ import { UserService } from './user.service';
 export class UserController {
   constructor(private userService: UserService) {}
   @Post('create')
-  async create(@Body() createUserDto: CreateUserDto): Promise<DbUserDto> {
-    const { name, location } = await this.userService.create(createUserDto);
-    return { name, location };
-    //create user
+  create(@Body() createUserDto: CreateUserDto): UserEntity[] {
+    return this.userService.create(createUserDto);
+    //create record of a new user
   }
   @Delete('delete')
-  async delete(@Body() deleteUserDto: DeleteUserDto): Promise<DbUserDto> {
-    const { name, location } = await this.userService.delete(deleteUserDto);
-    return { name, location };
-    //delete user from db
+  async delete(@Body() deleteUserDto: DeleteUserDto): Promise<DeleteResult> {
+    return await this.userService.delete(deleteUserDto);
+    //delete selected user from db
   }
 }
