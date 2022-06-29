@@ -1,27 +1,24 @@
 import { Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
 import { DeleteUserDto } from './dto/userDelete.dto';
 import { CreateUserDto } from './dto/createUser.dto';
-import { User, UserDocument } from './schemas/user.schema';
 import { BcryptService } from 'src/services/bcrypt.service';
+import { UserRepository } from 'src/database/repositories/user.repo';
+import { UserEntity } from 'src/database/entities/user.entity';
+import { DeleteResult } from 'typeorm';
 
 @Injectable()
 export class UserService {
   constructor(
-    @InjectModel(User.name) private userModel: Model<UserDocument>,
     private bcryptService: BcryptService,
+    private userRepository: UserRepository,
   ) {}
-  async create(createUserDto: CreateUserDto): Promise<User> {
-    return await this.userModel.create({
+  create(createUserDto: CreateUserDto): UserEntity[] {
+    return this.userRepository.create({
       ...createUserDto,
-      password: this.bcryptService.hash(createUserDto.password),
+      hashPassword: this.bcryptService.hash(createUserDto.password),
     });
   }
-  async delete(deleteUserDto: DeleteUserDto): Promise<User> {
-    return await this.userModel.findOneAndDelete({
-      login: deleteUserDto.login,
-    });
-    //delete user from db
+  async delete(deleteUserDto: DeleteUserDto): Promise<DeleteResult> {
+    return await this.userRepository.delete(deleteUserDto);
   }
 }
