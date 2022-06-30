@@ -1,5 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { DbUserDto } from 'src/user/dto/dbUser.dto';
+import { DeleteUserDto } from 'src/user/dto/userDelete.dto';
 import { DeleteResult, Repository } from 'typeorm';
 import { UserEntity } from '../entities/user.entity';
 
@@ -9,18 +11,13 @@ export class UserRepository {
     @InjectRepository(UserEntity)
     private userQuery: Repository<UserEntity>,
   ) {}
-  create(createUserDto): UserEntity[] {
-    try {
-      return this.userQuery.create(createUserDto);
-    } catch (error) {
-      throw error;
-    }
+  async create(dbUserDto: DbUserDto): Promise<UserEntity> {
+    return await this.userQuery.save(dbUserDto);
   }
-  async delete(deleteUserDto): Promise<DeleteResult> {
-    try {
-      return await this.userQuery.delete(deleteUserDto);
-    } catch (error) {
-      throw error;
-    }
+  async delete(deleteUserDto: DeleteUserDto): Promise<DeleteResult> {
+    return await this.userQuery.delete(deleteUserDto);
+  }
+  async getAll(): Promise<UserEntity[]> {
+    return await this.userQuery.find();
   }
 }
