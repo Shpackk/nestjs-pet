@@ -12,13 +12,17 @@ export class UserService {
     private bcryptService: BcryptService,
     private userRepository: UserRepository,
   ) {}
-  create(createUserDto: CreateUserDto): UserEntity[] {
-    return this.userRepository.create({
+  async create(createUserDto: CreateUserDto): Promise<UserEntity> {
+    return await this.userRepository.create({
       ...createUserDto,
       hashPassword: this.bcryptService.hash(createUserDto.password),
     });
+    //todo - fix UserEntity containing password property
   }
   async delete(deleteUserDto: DeleteUserDto): Promise<DeleteResult> {
     return await this.userRepository.delete(deleteUserDto);
+  }
+  async getAll(): Promise<UserEntity[]> {
+    return await this.userRepository.getAll();
   }
 }
