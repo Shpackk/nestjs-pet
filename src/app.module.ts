@@ -21,6 +21,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       database: process.env.DB_NAME,
       autoLoadEntities: true,
       synchronize: true,
+      logging: true,
     }),
     AuthModule,
     ProductsModule,
