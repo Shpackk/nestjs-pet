@@ -1,17 +1,22 @@
 import { Injectable } from '@nestjs/common';
-import { Product } from 'src/interfaces/product.interface';
+import { ProductEntity } from 'src/database/entities/product.entity';
+import { ProductRepository } from 'src/database/repositories/product.repo';
+import { UpdateResult } from 'typeorm';
+import { ProductDto } from './dto/product.dto';
 
 @Injectable()
 export class ProductsService {
-  private readonly products: Product[] = [];
-  add(product: Product) {
-    this.products.push(product);
+  constructor(private productRepository: ProductRepository) {}
+
+  async add(productDto: ProductDto): Promise<ProductEntity> {
+    return await this.productRepository.add(productDto);
   }
-  update(product: Product): Product[] {
-    console.log(product);
-    return this.products;
+
+  async update(productDto: ProductDto): Promise<UpdateResult> {
+    return await this.productRepository.update(productDto);
   }
-  findAll(): Product[] {
-    return this.products;
+
+  async findAll(): Promise<ProductEntity[]> {
+    return await this.productRepository.findAll();
   }
 }
